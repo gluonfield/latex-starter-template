@@ -1,0 +1,97 @@
+% Main content file
+% Add sections here or use \input to include additional part files
+
+\section{Introduction}
+
+Fourier series provide a way to represent periodic functions as infinite sums of sines and cosines. This representation is fundamental in signal processing, differential equations, and mathematical physics.
+
+\section{Preliminaries}
+
+\begin{definition}[Periodic Function]
+A function $f: \R \to \R$ is \emph{periodic} with period $T > 0$ if $f(x + T) = f(x)$ for all $x \in \R$.
+\end{definition}
+
+For simplicity, we consider functions with period $2\pi$, so $f(x + 2\pi) = f(x)$.
+
+\begin{definition}[Inner Product on $L^2$]
+For functions $f, g: [-\pi, \pi] \to \R$, we define the inner product:
+\begin{equation}
+    \inner{f}{g} = \int_{-\pi}^{\pi} f(x) g(x) \, \diff x
+\end{equation}
+\end{definition}
+
+\section{Orthogonality of Trigonometric Functions}
+
+The key to deriving Fourier coefficients is the orthogonality of sines and cosines.
+
+\begin{proposition}[Orthogonality Relations]
+\label{prop:orthogonality}
+For integers $m, n \geq 0$:
+\begin{align}
+    \int_{-\pi}^{\pi} \cos(mx) \cos(nx) \, \diff x &= \begin{cases} 0 & m \neq n \\ \pi & m = n \neq 0 \\ 2\pi & m = n = 0 \end{cases} \label{eq:cos-cos} \\[1em]
+    \int_{-\pi}^{\pi} \sin(mx) \sin(nx) \, \diff x &= \begin{cases} 0 & m \neq n \\ \pi & m = n \neq 0 \end{cases} \label{eq:sin-sin} \\[1em]
+    \int_{-\pi}^{\pi} \sin(mx) \cos(nx) \, \diff x &= 0 \quad \text{for all } m, n \label{eq:sin-cos}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+We prove \cref{eq:cos-cos}. Using the product-to-sum identity:
+\[
+    \cos(mx)\cos(nx) = \frac{1}{2}\left[\cos((m-n)x) + \cos((m+n)x)\right]
+\]
+For $m \neq n$, both terms integrate to zero over $[-\pi, \pi]$. For $m = n \neq 0$:
+\[
+    \int_{-\pi}^{\pi} \cos^2(nx) \, \diff x = \int_{-\pi}^{\pi} \frac{1 + \cos(2nx)}{2} \, \diff x = \pi
+\]
+The proofs for \cref{eq:sin-sin,eq:sin-cos} are similar.
+\end{proof}
+
+\section{Fourier Series Representation}
+
+\begin{theorem}[Fourier Series]
+\label{thm:fourier}
+A periodic function $f$ with period $2\pi$ can be represented as:
+\begin{equation}
+    f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \left[ a_n \cos(nx) + b_n \sin(nx) \right]
+    \label{eq:fourier-series}
+\end{equation}
+where the Fourier coefficients are given by:
+\begin{align}
+    a_n &= \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(nx) \, \diff x \quad (n \geq 0) \label{eq:coeff-a} \\
+    b_n &= \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(nx) \, \diff x \quad (n \geq 1) \label{eq:coeff-b}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Assume $f$ has the form \cref{eq:fourier-series}. To find $a_m$, multiply both sides by $\cos(mx)$ and integrate:
+\[
+    \int_{-\pi}^{\pi} f(x) \cos(mx) \, \diff x = \frac{a_0}{2} \int_{-\pi}^{\pi} \cos(mx) \, \diff x + \sum_{n=1}^{\infty} a_n \int_{-\pi}^{\pi} \cos(nx) \cos(mx) \, \diff x + \cdots
+\]
+By \cref{prop:orthogonality}, all terms vanish except when $n = m$, giving:
+\[
+    \int_{-\pi}^{\pi} f(x) \cos(mx) \, \diff x = a_m \cdot \pi
+\]
+Solving for $a_m$ yields \cref{eq:coeff-a}. The derivation of $b_n$ is analogous.
+\end{proof}
+
+\section{Example: Square Wave}
+
+\begin{example}[Square Wave]
+Consider the square wave defined on $[-\pi, \pi]$:
+\[
+    f(x) = \begin{cases} 1 & 0 < x < \pi \\ -1 & -\pi < x < 0 \end{cases}
+\]
+Since $f$ is odd, all $a_n = 0$. For the sine coefficients:
+\begin{align*}
+    b_n &= \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(nx) \, \diff x = \frac{2}{\pi} \int_{0}^{\pi} \sin(nx) \, \diff x \\
+    &= \frac{2}{\pi} \left[ -\frac{\cos(nx)}{n} \right]_0^{\pi} = \frac{2}{n\pi} \left( 1 - \cos(n\pi) \right)
+\end{align*}
+Since $\cos(n\pi) = (-1)^n$, we have $b_n = 0$ for even $n$ and $b_n = \frac{4}{n\pi}$ for odd $n$. Thus:
+\begin{equation}
+    f(x) = \frac{4}{\pi} \sum_{k=0}^{\infty} \frac{\sin((2k+1)x)}{2k+1} = \frac{4}{\pi} \left( \sin x + \frac{\sin 3x}{3} + \frac{\sin 5x}{5} + \cdots \right)
+\end{equation}
+\end{example}
+
+\section{Conclusion}
+
+The Fourier series decomposes periodic functions into a basis of orthogonal trigonometric functions. The orthogonality relations allow us to compute coefficients by projection, analogous to finding components in an orthonormal basis.
