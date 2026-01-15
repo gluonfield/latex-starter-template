@@ -23,7 +23,7 @@ jobs:
         with:
           root_file: main.tex
           working_directory: latex
-          args: -output-directory=../out
+          args: -pdf -output-directory=../out
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
